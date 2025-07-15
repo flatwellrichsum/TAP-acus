@@ -1,0 +1,141 @@
+#result-container {
+	width:100%;
+	height:100%;
+	padding:0px;
+	margin:0px;
+	overflow:hidden;
+
+	display:flex;
+	justify-content: center;
+	align-items: center;
+}
+
+
+#result-window {
+
+	background-color:#FFFFFF;
+ 	border-radius: 40px;
+ 	border:6px solid #cc7aa3;
+ 	
+	box-shadow: 4px 12px 0px #cc7aa3;
+ 	
+ 	width:800px;
+ 	height:450px;
+
+	display:flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+	
+	padding: 50px 0px;
+}
+
+#result-table{
+	margin-bottom: 20px;
+}
+
+#result-table td{
+	padding: 0 20px;
+}
+
+#result-table img{
+	width: 60px;
+	height: 60px;
+}
+
+#result-wrong
+{
+	border-bottom: 8px solid #c65e43;
+}
+
+#result-correct
+{
+	border-bottom: 8px solid #40a755;
+}
+
+.result-num{
+
+	text-align:center;
+	font-size: 48px;
+	font-weight: bold;
+	color: #333;
+	transform: scale(0);
+	}
+
+.result-num.animate{
+
+	animation: num-in 0.5s forwards;
+}
+
+@keyframes num-in 
+{
+  0%   { transform: scale(0.0); }
+  20%  { transform: scale(1.5); }
+  60%  { transform: scale(0.9); }
+  100% { transform: scale(1.0); }
+}
+
+.result-reaction 
+{
+	position:absolute;
+	top: calc(50% + 270px);
+	left: calc(50% + 180px);
+	width: 200px;
+	height: 200px;
+	
+	transform: translateY(-100%);
+	object-fit: cover;
+	display: block;
+}
+
+.result-text
+{
+	position:absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0.0);
+	opacity: 0;
+}
+
+.result-text.pop-out{
+
+	animation: pop-out 1.0s forwards;
+}
+
+.result-text.fade-in{
+
+	animation: fade-in 1.0s forwards;
+}
+
+@keyframes pop-out 
+{
+  0%   { transform: translate(-50%, -50%) scale(0.0); opacity: 1; }
+  20%  { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+  60%  { transform: translate(-50%, -50%) scale(0.9); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+}
+
+@keyframes fade-in 
+{
+  0%   { transform: translate(-50%, -50%) scale(1.0); opacity: 0; }
+  100% { transform: translate(-50%, -50%) scale(1.0); opacity: 1; }
+}
+
+#confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 9999;
+  pointer-events: none;
+  display: block;
+}
+
+
+.result-backButton
+{
+	display: none;
+}
+

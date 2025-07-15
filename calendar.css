@@ -1,0 +1,178 @@
+body {
+  color: #555;
+  margin: 0;
+  padding: 10px;
+  text-align: center;
+}
+
+#calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+#calendar-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;  
+
+}
+
+#calendar-header button {
+  font-size: 16px;
+  padding: 8px 16px;
+  
+  	background-color: #cc7aa3;
+	color:#FFFFFF;
+	border:0px;
+	border-radius:10px;
+}
+
+#calendar-title {
+  font-size: 36px;
+  margin: 0;
+  
+  margin-top:4px;
+}
+
+#calendar-wrapper {
+  display: grid;
+  gap: 4px;
+  width: fit-content;
+}
+
+.day-labels {
+  display: grid;
+  grid-template-columns: repeat(7, 90px);
+  height: 40px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 90px);
+  grid-template-rows: repeat(6, 90px);
+}
+
+.day-label {
+  text-align: center;
+  line-height: 40px;
+  font-size:20px;
+  background-color: #faedf5;
+  border: 1px solid #cc7aa3;
+  border-radius:8px;
+}
+.day-label:nth-child(1) { color: red; }
+.day-label:nth-child(7) { color: blue; }
+
+.tile {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  border: 1px solid #cc7aa3;
+  background-color: #faedf5;
+  user-select: none;
+  cursor: default;
+}
+
+.tile .number {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  font-weight: bold;
+  font-size: 28px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.tile .image-bg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 90px; height: 90px;
+  background-image: url("your-image.png");
+  background-repeat: no-repeat;
+  background-size: 630px 540px;
+  opacity: 0;
+  transform: scale(3);
+  transition: opacity 2s ease, transform 2s cubic-bezier(0.8, 0.1, 0.9, 0.1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.tile.animating .image-bg {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tile.today-mark {
+  outline: 6px solid #cc7aa3;
+  outline-offset: -6px;
+}
+
+.particle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background: gold;
+  border-radius: 50%;
+  pointer-events: none;
+
+  animation:
+   flyout-xform 1s cubic-bezier(0.1, 1.0, 1.0, 1.0) forwards,
+   flyout-opacity 1s cubic-bezier(0.9, 0.0, 1.0, 1.0) forwards;
+
+  z-index: 100;
+}
+
+.particle.star {
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 1;
+  width: auto;
+  height: auto;
+  background: none;
+}
+
+@keyframes flyout-xform {
+  0% {
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    transform: translate(var(--dx), var(--dy)) scale(0.5) rotate(360deg);
+  }
+}
+
+@keyframes flyout-opacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+#message {
+	font-size:36px;
+	font-weight:bold;
+	
+	margin-top:20px;
+}
+
+#back-button 
+{
+	display: inline-block;
+	padding: 8px 32px;
+	background-color: #cc7aa3;
+	color: white;
+	text-decoration: none;
+	border-radius: 10px;
+	border: none;
+	font-size: 20px;
+	font-weight:bold;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+	
+	margin-top:20px;
+}

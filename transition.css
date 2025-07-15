@@ -1,0 +1,28 @@
+/* transition.css */
+#iris {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vmax;
+  height: 100vmax;
+  z-index: 9999;
+  overflow:hidden;
+  pointer-events: none;
+
+  background-color:#FFFFFF;
+
+  transition: background-size 0.3s ease-in;
+  background: radial-gradient(circle at center, transparent 0%, transparent 0.09%, white 0.1%);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: calc(100*1000vmax) calc(100*1000vmax);
+}
+
+body.transition-in #iris {
+  background-size: 100vmax 100vmax;
+}
+
+body.transition-out #iris {
+  background-size: calc(100*1000vmax) calc(100*1000vmax);
+}

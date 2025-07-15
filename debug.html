@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<title></title>
+		<style>
+* {
+	user-select: auto !important;
+	-webkit-user-drag: auto !important;
+	-webkit-user-select: auto !important;
+	-webkit-touch-callout: default !important;
+	touch-action: auto !important;
+}
+html, body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+}
+
+body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+#wrapper {
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+
+.menuVisBtn {
+	display: inline-block;
+	min-width: 60px;
+	margin-left: 6px;
+	padding: 3px 6px;
+	cursor: pointer;
+	border: 1px solid #666;
+	border-radius: 6px;
+	user-select: none;
+	background-color: #eee;
+	text-align: center;
+	font-weight: bold;
+	transition: background-color 0.3s, border-color 0.3s;
+}
+.menuVisBtn.on {
+	background-color: #8f8;
+	border-color: #484;
+}
+table {
+	border-collapse: collapse;
+	margin-bottom: 40px;
+	width: 100%;
+	max-width: 800px;
+}
+th, td {
+	border: 1px solid #aaa;
+	padding: 6px 12px;
+	text-align: left;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+th {
+	background-color: #ddd;
+}
+input[type="number"] {
+	width: 40px;
+}
+button.toggle-btn {
+	min-width: 40px;
+	padding: 3px 6px;
+	cursor: pointer;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background-color: #ffcccc;
+	user-select: none;
+	transition: background-color 0.3s;
+}
+button.toggle-btn.on {
+	background-color: #ccffcc;
+}
+#AbacusContainer {
+	display: flex;
+	flex-direction: row;
+	gap: 20px;
+	flex-wrap: nowrap;
+}
+
+.button-link {
+display: inline-block;
+padding: 8px 32px;
+background-color: #cc7aa3;
+color: white;
+text-decoration: none;
+border-radius: 5px;
+border: none;
+font-size: 20px;
+cursor: pointer;
+transition: background-color 0.2s ease;
+}
+
+#FinishedCountTable {
+	max-width: none;
+	width: 120px;
+	margin-top:10px;
+}
+
+#FinishedCountTable td:first-child {
+	width: 80px;
+}
+
+#FinishedCountTable td:last-child {
+	width: 40px;
+}
+
+
+#FinishedCountSection input {
+	padding: 4px;
+	margin-right: 8px;
+}
+
+#newDateInput {
+	height:40px;
+	width: 300px;
+}
+
+#newCountInput, #newGoalInput {
+	height:40px;
+	width: 100px;
+}
+
+#addFinishedCountBtn {
+	padding: 4px 12px;
+}
+		</style>
+	</head>
+	<body>
+		<div id="wrapper">
+
+			<a href="index.html" class="button-link">もどる</a><br>
+
+			<h2>現在のステータス</h2>
+			<section id="CurrentStatusSection">
+				<table id="CurrentStatusTable"></table>
+			</section>
+
+			<h2>問題の詳細設定</h2>
+			<section id="AbacusContainer">
+				<section id="AddSubSection">
+					<h3>たしひき</h3>
+					<table id="AddSubTable">
+						<thead>
+							<tr>
+								<th>レベル</th>
+								<th>桁数</th>
+								<th>口数</th>
+								<th>基礎？</th>
+								<th>ﾌﾗｯｼｭ</th>
+								<th>正解数</th>
+								<th>時間</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</section>
+
+				<section id="MultSection">
+					<h3>かけざん</h3>
+					<table id="MultTable">
+						<thead>
+							<tr>
+								<th>レベル</th>
+								<th>桁数①</th>
+								<th>桁数②</th>
+								<th>最大段</th>
+								<th>正解数</th>
+								<th>時間</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</section>
+
+				<section id="DivideSection">
+					<h3>わりざん</h3>
+					<table id="DivideTable">
+						<thead>
+							<tr>
+								<th>レベル</th>
+								<th>桁数①</th>
+								<th>桁数②</th>
+								<th>最大段</th>
+								<th>あまり？</th>
+								<th>正解数</th>
+								<th>時間</th>
+							</tr>
+						</thead>
+						<tbody></tbody>
+					</table>
+				</section>
+			</section>
+
+			<h2>クリア回数</h2>
+ 	 			<div>
+ 	 				<input id="newDateInput" type="text" placeholder="日付 (YYYYMMDD)">
+ 					<input id="newCountInput" type="number" min="0" step="1" placeholder="回数">
+ 					<input id="newGoalInput" type="number" min="0" step="1" placeholder="ノルマ">
+ 					<button id="addFinishedCountBtn">追加</button>
+ 				</div>
+			<section id="FinishedCountSection">
+				<table id="FinishedCountTable">
+				<thead>
+					<tr>
+						<th>日付</th>
+						<th>回数</th>
+						<th>ノルマ</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+					<tbody id="FinishedCountBody">
+					</tbody>
+				</table>
+			</section>
+
+<script>
+	function createInput(value, onChange) {
+		const input = document.createElement("input");
+		input.type = "number";
+		input.step = "0.1";
+		input.value = value;
+		input.style.width = "40px";
+		input.addEventListener("change", () => {
+			const val = parseFloat(input.value, 10);
+			if (!isNaN(val)) onChange(val);
+		});
+		return input;
+	}
+
+	function createToggle(value, onToggle) {
+		const btn = document.createElement("button");
+		btn.className = "toggle-btn";
+		btn.textContent = value ? "はい" : "いいえ";
+		if (value) btn.classList.add("on");
+		btn.addEventListener("click", () => {
+			value = !value;
+			btn.textContent = value ? "はい" : "いいえ";
+			btn.classList.toggle("on", value);
+			onToggle(value);
+		});
+		return btn;
+	}
+
+function renderCurrentStatus() {
+	const raw = localStorage.getItem("currentStatus");
+	if (!raw) return;
+	let status;
+	try {
+		status = JSON.parse(raw);
+	} catch {
+		alert("currentStatus の読み込みに失敗しました");
+		return;
+	}
+
+	const table = document.getElementById("CurrentStatusTable");
+	table.innerHTML = "";
+
+	const keysOrder = [
+		["0-0", "1-0", "2-0", "3-0"],
+		["0-1", "1-1", "2-1", null],
+		["0-2", null,	"2-2", null]
+	];
+
+	const labelMap = {
+		"0-0": "みえる", "0-1": "みえる", "0-2": "みえる",
+		"1-0": "あんざん", "1-1": "あんざん",
+		"2-0": "エアー", "2-1": "エアー", "2-2": "エアー",
+		"3-0": "フラッシュ"
+	};
+
+	keysOrder.forEach(rowKeys => {
+		const trTitles = document.createElement("tr");
+		rowKeys.forEach(k => {
+			const th = document.createElement("th");
+			th.colSpan = 2;
+			if (k) {
+				const label = document.createElement("span");
+				label.textContent = (labelMap[k] || k) + " ";
+
+				const btn = document.createElement("div");
+				btn.className = "menuVisBtn";
+
+				const isOn = menuVisibility[k];
+				btn.textContent = isOn ? "未" : "済";
+				btn.style.backgroundColor = isOn ? "#ffcccc" : "#ccffcc";
+				btn.style.borderColor = isOn ? "#cc6666" : "#66aa66";
+
+				btn.addEventListener("click", () => {
+					menuVisibility[k] = !menuVisibility[k];
+					const newOn = menuVisibility[k];
+					btn.textContent = newOn ? "未" : "済";
+					btn.style.backgroundColor = newOn ? "#ffcccc" : "#ccffcc";
+					btn.style.borderColor = newOn ? "#cc6666" : "#66aa66";
+					saveMenuVisibility();
+				});
+
+				th.appendChild(label);
+				th.appendChild(btn);
+			}
+			trTitles.appendChild(th);
+		});
+		table.appendChild(trTitles);
+
+		const trLabels = document.createElement("tr");
+		rowKeys.forEach(k => {
+			const tdLv = document.createElement("td");
+			const tdHeart = document.createElement("td");
+			if (k && status[k]) {
+				tdLv.textContent = "レベル";
+				tdHeart.textContent = "ハート";
+			}
+			trLabels.appendChild(tdLv);
+			trLabels.appendChild(tdHeart);
+		});
+		table.appendChild(trLabels);
+
+		const trInputs = document.createElement("tr");
+		rowKeys.forEach(k => {
+			const tdLv = document.createElement("td");
+			const tdHeart = document.createElement("td");
+			if (k && status[k]) {
+				tdLv.appendChild(createInput(status[k].Lv, val => {
+					status[k].Lv = val;
+					saveCurrentStatus(status);
+				}));
+				tdHeart.appendChild(createInput(status[k].hearts, val => {
+					status[k].hearts = val;
+					saveCurrentStatus(status);
+				}));
+			}
+			trInputs.appendChild(tdLv);
+			trInputs.appendChild(tdHeart);
+		});
+		table.appendChild(trInputs);
+	});
+}
+
+	function saveCurrentStatus(status) {
+		try {
+			localStorage.setItem("currentStatus", JSON.stringify(status, null, 2));
+		} catch {
+			alert("currentStatusの保存に失敗しました");
+		}
+	}
+
+	function saveMenuVisibility() {
+		try {
+			localStorage.setItem("menuVisibility", JSON.stringify(menuVisibility, null, 2));
+		} catch {
+			alert("menuVisibilityの保存に失敗しました");
+		}
+	}
+
+function renderAbacusSpec() {
+	const raw = localStorage.getItem("abacusSpec");
+	if (!raw) return;
+
+	let spec;
+	try {
+		spec = JSON.parse(raw);
+	} catch (e) {
+		alert("abacusSpec の読み込みに失敗しました");
+		return;
+	}
+	abacusSpec = spec;
+
+	const addsubTbody = document.querySelector("#AddSubTable tbody");
+	const multTbody = document.querySelector("#MultTable tbody");
+	const divideTbody = document.querySelector("#DivideTable tbody");
+
+	addsubTbody.innerHTML = "";
+	multTbody.innerHTML = "";
+	divideTbody.innerHTML = "";
+
+	if (spec["0"]) {
+		for (const [level, conf] of Object.entries(spec["0"])) {
+			const tr = document.createElement("tr");
+
+			const tdLevel = document.createElement("td");
+			tdLevel.textContent = level;
+			tr.appendChild(tdLevel);
+
+			const tdDig = document.createElement("td");
+			tdDig.appendChild(createInput(conf.dig ?? 0, val => {
+				conf.dig = val; saveSpec();
+			}));
+			tr.appendChild(tdDig);
+
+			const tdQnum = document.createElement("td");
+			tdQnum.appendChild(createInput(conf.qNum ?? 0, val => {
+				conf.qNum = val; saveSpec();
+			}));
+			tr.appendChild(tdQnum);
+
+			const tdBasic = document.createElement("td");
+			tdBasic.appendChild(createToggle(conf.basic ?? false, val => {
+				conf.basic = val; saveSpec();
+			}));
+			tr.appendChild(tdBasic);
+
+			const tdFlash = document.createElement("td");
+			tdFlash.appendChild(createInput(conf.flash ?? 0.0, val => {
+				conf.flash = val; saveSpec();
+			}));
+			tr.appendChild(tdFlash);
+
+			const tdBorder = document.createElement("td");
+			tdBorder.appendChild(createInput(conf.border ?? 0, val => {
+				conf.border = val; saveSpec();
+			}));
+			tr.appendChild(tdBorder);
+
+			const tdDuration = document.createElement("td");
+			tdDuration.appendChild(createInput(conf.duration ?? 0.0, val => {
+				conf.duration = val; saveSpec();
+			}));
+			tr.appendChild(tdDuration);
+
+			addsubTbody.appendChild(tr);
+		}
+	}
+
+	if (spec["1"]) {
+		for (const [level, conf] of Object.entries(spec["1"])) {
+			const tr = document.createElement("tr");
+
+			const tdLevel = document.createElement("td");
+			tdLevel.textContent = level;
+			tr.appendChild(tdLevel);
+
+			const tdDig1 = document.createElement("td");
+			tdDig1.appendChild(createInput(conf.dig1 ?? 0, val => {
+				conf.dig1 = val; saveSpec();
+			}));
+			tr.appendChild(tdDig1);
+
+			const tdDig2 = document.createElement("td");
+			tdDig2.appendChild(createInput(conf.dig2 ?? 0, val => {
+				conf.dig2 = val; saveSpec();
+			}));
+			tr.appendChild(tdDig2);
+
+			const tdMax = document.createElement("td");
+			tdMax.appendChild(createInput(conf.max ?? 0, val => {
+				conf.max = val; saveSpec();
+			}));
+			tr.appendChild(tdMax);
+
+			const tdBorder = document.createElement("td");
+			tdBorder.appendChild(createInput(conf.border ?? 0, val => {
+				conf.border = val; saveSpec();
+			}));
+			tr.appendChild(tdBorder);
+
+			const tdDuration = document.createElement("td");
+			tdDuration.appendChild(createInput(conf.duration ?? 0, val => {
+				conf.duration = val; saveSpec();
+			}));
+			tr.appendChild(tdDuration);
+
+			multTbody.appendChild(tr);
+		}
+	}
+
+	if (spec["2"]) {
+		for (const [level, conf] of Object.entries(spec["2"])) {
+			const tr = document.createElement("tr");
+
+			const tdLevel = document.createElement("td");
+			tdLevel.textContent = level;
+			tr.appendChild(tdLevel);
+
+			const tdDig1 = document.createElement("td");
+			tdDig1.appendChild(createInput(conf.dig1 ?? 0, val => {
+				conf.dig1 = val; saveSpec();
+			}));
+			tr.appendChild(tdDig1);
+
+			const tdDig2 = document.createElement("td");
+			tdDig2.appendChild(createInput(conf.dig2 ?? 0, val => {
+				conf.dig2 = val; saveSpec();
+			}));
+			tr.appendChild(tdDig2);
+
+			const tdMax = document.createElement("td");
+			tdMax.appendChild(createInput(conf.max ?? 0, val => {
+				conf.max = val; saveSpec();
+			}));
+			tr.appendChild(tdMax);
+
+			const tdRemain = document.createElement("td");
+			tdRemain.appendChild(createToggle(conf.remain ?? false, val => {
+				conf.remain = val; saveSpec();
+			}));
+			tr.appendChild(tdRemain);
+
+			const tdBorder = document.createElement("td");
+			tdBorder.appendChild(createInput(conf.border ?? 0, val => {
+				conf.border = val; saveSpec();
+			}));
+			tr.appendChild(tdBorder);
+
+			const tdDuration = document.createElement("td");
+			tdDuration.appendChild(createInput(conf.duration ?? 0, val => {
+				conf.duration = val; saveSpec();
+			}));
+			tr.appendChild(tdDuration);
+
+			divideTbody.appendChild(tr);
+		}
+	}
+}
+
+function saveSpec() {
+	try {
+		localStorage.setItem("abacusSpec", JSON.stringify(abacusSpec, null, 2));
+	} catch(e) {
+		alert("保存に失敗しました");
+	}
+}
+
+let abacusSpec = {};
+let menuVisibility = {};
+
+try {
+	abacusSpec = JSON.parse(localStorage.getItem("abacusSpec") || "{}");
+} catch { abacusSpec = {}; }
+
+try {
+	menuVisibility = JSON.parse(localStorage.getItem("menuVisibility") || "{}");
+} catch { menuVisibility = {}; }
+
+if (Object.keys(menuVisibility).length === 0) {
+	["0-0","1-0","2-0","3-0","0-1","1-1","2-1","0-2","2-2"].forEach(k => menuVisibility[k] = true);
+	saveMenuVisibility();
+}
+
+function renderFinishedCount() {
+	const raw = localStorage.getItem("finishedCount");
+	if (!raw) return;
+
+	let data;
+	try {
+		data = JSON.parse(raw);
+	} catch {
+		alert("finishedCount の読み込みに失敗しました");
+		return;
+	}
+
+	const tbody = document.getElementById("FinishedCountBody");
+	if (!tbody) return;
+
+	tbody.innerHTML = "";
+
+	const sortedDates = Object.keys(data).sort();
+
+	for (const date of sortedDates) {
+		const tr = document.createElement("tr");
+
+		// 日付セル
+		const tdDate = document.createElement("td");
+		const formatted = date.length === 8
+			? `${date.slice(0, 4)}/${date.slice(4, 6)}/${date.slice(6, 8)}`
+			: date;
+		tdDate.textContent = formatted;
+		tr.appendChild(tdDate);
+
+		const val = data[date];
+		let actual = 0;
+		let goal = 0;
+		if (Array.isArray(val) && val.length === 2) {
+			[actual, goal] = val;
+		} else if (typeof val === "number") {
+			actual = val;
+			goal = 2;
+		}
+
+		// 実績セル（編集可能）
+		const tdActual = document.createElement("td");
+		const inputActual = document.createElement("input");
+		inputActual.type = "number";
+		inputActual.min = "0";
+		inputActual.step = "1";
+		inputActual.value = actual;
+		inputActual.style.width = "60px";
+		inputActual.addEventListener("change", () => {
+			const newActual = parseInt(inputActual.value, 10);
+			if (!isNaN(newActual) && newActual >= 0) {
+				data[date] = [newActual, goal];
+				saveFinishedCount(data);
+			}
+		});
+		tdActual.appendChild(inputActual);
+		tr.appendChild(tdActual);
+
+		// ノルマセル（編集可能）
+		const tdGoal = document.createElement("td");
+		const inputGoal = document.createElement("input");
+		inputGoal.type = "number";
+		inputGoal.min = "0";
+		inputGoal.step = "1";
+		inputGoal.value = goal;
+		inputGoal.style.width = "60px";
+		inputGoal.addEventListener("change", () => {
+			const newGoal = parseInt(inputGoal.value, 10);
+			if (!isNaN(newGoal) && newGoal >= 0) {
+				data[date] = [actual, newGoal];
+				saveFinishedCount(data);
+			}
+		});
+		tdGoal.appendChild(inputGoal);
+		tr.appendChild(tdGoal);
+
+		// 削除ボタン
+		const tdDelete = document.createElement("td");
+		const delBtn = document.createElement("button");
+		delBtn.textContent = "削除";
+		delBtn.style.cursor = "pointer";
+		delBtn.addEventListener("click", () => {
+			if (confirm(`【${formatted}】の記録を削除しますか？`)) {
+				delete data[date];
+				saveFinishedCount(data);
+				renderFinishedCount();
+			}
+		});
+		tdDelete.appendChild(delBtn);
+		tr.appendChild(tdDelete);
+
+		tbody.appendChild(tr);
+	}
+}
+
+function setupFinishedCountAddForm() {
+	const inputDate = document.getElementById("newDateInput");
+	const inputCount = document.getElementById("newCountInput");
+	const inputGoal = document.getElementById("newGoalInput");
+	const addBtn = document.getElementById("addFinishedCountBtn");
+
+	if (!inputDate || !inputCount || !addBtn) return;
+
+	addBtn.addEventListener("click", () => {
+		const dateStr = inputDate.value.trim();
+		
+		const countVal = parseInt(inputCount.value.trim(), 10);
+		const goalVal = parseInt(inputGoal.value.trim(), 10);
+
+		if (!/^\d{8}$/.test(dateStr)) {
+			alert("日付は8桁のYYYYMMDD形式で入力してください");
+			return;
+		}
+
+		if (isNaN(countVal) || countVal < 0) {
+			alert("回数は0以上の整数で入力してください");
+			return;
+		}
+		
+		if (isNaN(goalVal) || goalVal < 0) {
+		alert("ノルマは0以上の整数で入力してください");
+		return;
+	}
+
+		let data = {};
+		try {
+			data = JSON.parse(localStorage.getItem("finishedCount") || "{}");
+		} catch {}
+
+		data[dateStr] = [countVal, goalVal];
+
+		saveFinishedCount(data);
+		renderFinishedCount();
+
+		inputDate.value = "";
+		inputGoal.value = "";
+		inputCount.value = "";
+	});
+}
+
+function saveFinishedCount(data) {
+	try {
+		localStorage.setItem("finishedCount", JSON.stringify(data, null, 2));
+	} catch {
+		alert("finishedCount の保存に失敗しました");
+	}
+}
+
+renderCurrentStatus();
+renderAbacusSpec();
+renderFinishedCount();
+setupFinishedCountAddForm();
+	
+			</script>
+		</div>
+	</body>
+</html>

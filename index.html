@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>TAP-acus</title>
+		<link rel="icon" href="/img/favicon.ico">
+		<link rel="stylesheet" href="default.css">
+		<link rel="stylesheet" href="transition.css">
+		<link rel="stylesheet" href="opening.css">
+		<link rel="stylesheet" href="menu.css">
+		<link rel="stylesheet" href="abacus.css">
+		<link rel="stylesheet" href="result.css">
+		<link rel="stylesheet" href="calendar.css">
+
+		<link rel="manifest" href="manifest.json">
+		<meta name="theme-color" content="#2196f3">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<link rel="apple-touch-icon" href="img/icon.png">
+	</head>
+	<body class="transition-out">
+		<div id="iris"></div>
+		
+<!-- [OPENING] -->
+		
+		<div id="opening-screen" class="screen visible">
+			<img src="img/title.png" id="title-image" />
+		</div>
+
+<!-- [MENU] -->
+		
+		<div id="menu-screen" class="screen">
+			<div class="bg_constant"></div>
+			<div class="bg_sliding"></div>
+			<div id="menu-container">
+				<table class="menu-table">
+					<tr>
+						<td><img src="img/menu/category_0.png" class="menuCategory"></td>
+						<td><button id="menuBtn_0-0" class="menuButton" data-mode="0" data-category="0"></button></td>
+						<td><button id="menuBtn_1-0" class="menuButton" data-mode="1" data-category="0"></button></td>
+						<td><button id="menuBtn_2-0" class="menuButton" data-mode="2" data-category="0"></button></td>
+						<td><button id="menuBtn_3-0" class="menuButton" data-mode="3" data-category="0"></button></td>
+					</tr>
+					<tr>
+						<td><img src="img/menu/category_1.png" class="menuCategory"></td>
+						<td><button id="menuBtn_0-1" class="menuButton" data-mode="0" data-category="1"></button></td>
+						<td><button id="menuBtn_1-1" class="menuButton" data-mode="1" data-category="1"></button></td>
+						<td><button id="menuBtn_2-1" class="menuButton" data-mode="2" data-category="1"></button></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><img src="img/menu/category_2.png" class="menuCategory"></td>
+						<td><button id="menuBtn_0-2" class="menuButton" data-mode="0" data-category="2"></button></td>
+						<td></td>
+						<td><button id="menuBtn_2-2" class="menuButton" data-mode="2" data-category="2"></button></td>
+						<td id="menu-reaction-cell"><div id="menu-reaction-container"><img src="/img/reaction/wonder.gif" id="menu-reaction"></div></td>
+					</tr>
+				</table> 
+			</div>
+		</div>
+
+<!-- [ABACUS] -->
+		
+		<div id="abacus-screen" class="screen">
+		
+			<div id="abacus-container">
+
+				<div id="quiz-container">
+					<div id="quiz">Loading...</div>
+				</div>
+
+				<div id="board-container">
+					<canvas id="gauge"></canvas>
+					<div id="board">
+						<div id="beads-container">
+							<div class="beads" id="upperBeads"></div>
+							<div class="separator"></div>
+							<div class="beads" id="lowerBeads"></div>
+						</div>
+						<div id="keypad-container">
+							<div id="keypad-display-wrapper">
+								<div id="keypad-display">0</div>
+								<div id="backspace-button">
+									<img src="img/keypad/backspace.png" alt="Backspace">
+								</div>
+							</div>
+						</div>
+						<div class="sideButtons-container">
+							<img id="reset" src="img/keypad/reset_off.png" />
+							<img id="check" src="img/keypad/check_off.png" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<!-- [RESULT] -->
+
+		<div id="result-screen" class="screen">
+			<div class="bg_constant"></div>
+			<div class="bg_sliding"></div>
+			<div id="result-container">
+				<div id="result-window">
+					<table id="result-table">
+						<tr><td><img src="img/result/correct.png"></td><td><img src="img/result/wrong.png"></td></tr>
+						<tr><td><div id="result-correct">
+								<div id="result-correct-num" class="result-num">6</div>
+							</div></td><td>
+							<div id="result-wrong">
+								<div id="result-wrong-num" class="result-num">0</div>
+							</div>
+						</td></tr>
+					</table>
+					<button class="backButton result-backButton">もどる</button>
+				</div>
+			</div>
+			<img class="result-reaction">
+			<img src="img/result/perfect.png" class="result-text">
+		</div>
+
+<!-- [CALENDAR] -->
+
+		<div id="calendar-screen" class="screen">
+			<div class="bg_constant"></div>
+			<div class="bg_sliding"></div>
+			<main id="calendar-container">
+			<div id="calendar-header">
+				<button id="prev-btn">◀</button>
+				<h1 id="calendar-title"></h1>
+				<button id="next-btn">▶</button>
+			</div>
+			<div id="calendar-wrapper">
+				<div class="day-labels" id="weekday-labels"></div>
+				<div class="calendar-grid" id="calendar-grid"></div>
+			</div>
+			<div id="message"></div>
+			</main>
+			<button id="back-button">メニューへ</button>
+		</div>
+
+<script src="preloadImages.js"></script>
+<script src="audioPlayer.js"></script>
+<script src="default.js"></script>
+<script src="opening.js"></script>
+<script src="menu.js"></script>
+<script src="abacus.js"></script>
+<script src="result.js"></script>
+<script src="calendar.js"></script>
+
+<script>		
+document.addEventListener("DOMContentLoaded", () => { initialSetups(); });
+
+if ('serviceWorker' in navigator) {
+	window.addEventListener('load', () => {
+		navigator.serviceWorker.register('./sw.js')
+		.then(reg => console.log('Service Worker registered:', reg.scope))
+		.catch(err => console.error('Service Worker registration failed:', err));
+	});
+}
+
+</script>
+
+	</body>
+</html>

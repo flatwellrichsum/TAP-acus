@@ -1,0 +1,194 @@
+#abacus-screen {
+	color: #626466;
+	background-color: #faedf5;
+}
+
+#abacus-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+}
+
+
+#quiz-container {
+	flex-grow: 1;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+	width: 100%;
+	margin-top: 10px;
+}
+
+#quiz {
+	font-family: Arial;
+	font-weight: bold;
+	white-space: pre-line;
+	text-align: right;
+}
+
+#board-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 10px;
+
+	background-color: #cc7aa3;
+ 	border-radius: 40px;
+
+	padding:18px 4px 4px 4px;
+}
+
+#gauge {
+	width: 840px;
+	height: 20px;
+	
+	background-color: #FAFAFA;
+
+ 	border:3px solid #FAFAFA;
+	border-radius: 10px;
+	
+	margin-bottom: 10px;
+}
+
+#board {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	
+	padding: 10px;
+
+	background-color:#F2F2F2;
+ 	border-radius: 40px;
+ 	border:3px solid #cc7aa3;
+ }
+
+#beads-container {
+	display: flex;
+	flex-direction: column;
+}
+
+.beads {
+	display: flex;
+	justify-content: center;
+	gap: 4px;
+	align-items: center;
+	width:520px;
+}
+
+.column {
+	display: flex;
+	flex-direction: column;
+	gap: 0px;
+}
+
+.button-container {
+	position: relative;
+	line-height: 0;
+	padding: 2px;
+}
+
+.button-container img {
+	width: 120px;
+}
+
+.button-container div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.separator {
+	height: 6px;
+	background-color: #b0b4b7;
+	margin: 4px;
+	width: 100%;
+}
+
+.number {
+	line-height: 1.0;
+	font-size: 60px;
+}
+
+.number-big {
+	font-size: 100px;
+	font-weight: bold;
+	text-align: center;
+	line-height: 1.5;
+}
+
+#keypad-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	margin-left: 20px;
+}
+
+#keypad-display-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 14px;
+}
+
+#keypad-display {
+	width: 140px;
+	height: 50px;
+	font-size: 40px;
+	font-weight: bold;
+	color: #626466;
+	text-align: right;
+	padding: 5px 10px;
+	border: 2px solid #999;
+	border-radius: 12px;
+	background-color: #FFFFFF;
+	user-select: none;
+	font-family: Arial, sans-serif;
+}
+
+#backspace-button img {
+	height: 30px;
+	cursor: pointer;
+	user-select: none;
+	-webkit-user-drag: none;
+}
+
+.keypad-row {
+	display: flex;
+	gap: 2px;
+}
+
+.keypad-button {
+	height: 70px;
+	position: relative;
+	line-height: 0;
+}
+
+.keypad-button img {
+	height: 70px;
+	user-select: none;
+	-webkit-user-drag: none;
+	pointer-events: none;
+}
+
+.sideButtons-container {
+
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-left: 20px;
+}
+
+.sideButtons-container img {
+	width:120px;
+}
